@@ -4,6 +4,7 @@ import { chatModels, codeModels } from "./catalog"
 import { InstallOllama } from "./InstallOllama"
 import { ModelCategorySection } from "./ModelCategorySection"
 import { useModelManager } from "./manager"
+import { SystemInfo } from "./SystemInfo"
 
 export function OllamaManager() {
   const { t } = useTranslation()
@@ -27,6 +28,8 @@ export function OllamaManager() {
       <p className="text-[var(--elevate-muted)] text-balance text-center mb-8">
         {t("ollama.summary")}
       </p>
+
+      <SystemInfo />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
         <ModelCategorySection

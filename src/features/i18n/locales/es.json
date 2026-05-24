@@ -32,6 +32,8 @@
     "notRunning": "Ollama no está en ejecución",
     "notRunningDesc": "Esta aplicación necesita Ollama para gestionar modelos de IA. Instálalo para comenzar.",
     "summary": "Gestiona y ejecuta modelos de IA ligeros localmente con Ollama. Explora los modelos recomendados, instálalos con un clic y ejecútalos directamente desde esta aplicación.",
+    "recommended": "Recomendado",
+    "systemInfo": "{{os}} · {{cores}} núcleos · {{ram}} RAM · {{gpu}} · {{vram}} VRAM",
     "install": "Instalar",
     "installing": "Instalando...",
     "run": "Ejecutar",
