@@ -57,6 +57,10 @@
 - [x] Mostrar botón "Instalar Ollama" con enlace a `ollama.com/download` si no está disponible
 - [x] Listar modelos instalados con nombre y tamaño
 - [x] Reemplazar contenido plantilla por gestor de modelos
+- [x] Catálogo de modelos ligeros recomendados en dos categorías: Chat y Código
+- [x] Botón "Instalar" que descarga el modelo vía `POST /api/pull`
+- [x] Botón "Ejecutar" que prueba el modelo vía `POST /api/generate`
+- [x] Los modelos instalados se detectan automáticamente y muestran "Ejecutar" en vez de "Instalar"
 
 ---
 
@@ -134,6 +138,7 @@ minimalIA/
 │   │   │   └── LangToggle.tsx    # Selector de idioma EN/ES
 │   │   └── ollama/
 │   │       ├── InstallOllama.tsx # Botón de instalación de Ollama
+│   │       ├── models.ts         # Catálogo de modelos recomendados
 │   │       └── OllamaManager.tsx # Gestor de modelos Ollama
 │   ├── hooks/
 │   │   └── use-ollama.ts     # Hook para consultar API de Ollama

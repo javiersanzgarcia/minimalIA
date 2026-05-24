@@ -1,7 +1,7 @@
-import { LangToggle } from "./components/lang/LangToggle"
-import { OllamaManager } from "./components/ollama/OllamaManager"
-import { ThemeToggle } from "./components/theme/ThemeToggle"
-import "./App.css"
+import { LangToggle } from "./components/lang/LangToggle";
+import { OllamaManager } from "./components/ollama/OllamaManager";
+import { ThemeToggle } from "./components/theme/ThemeToggle";
+import "./App.css";
 
 function App() {
   return (
@@ -16,11 +16,11 @@ function App() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-8 py-12 text-center">
+      <main className="w-full px-8 py-0">
         <OllamaManager />
       </main>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

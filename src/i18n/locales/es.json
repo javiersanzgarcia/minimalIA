@@ -31,8 +31,30 @@
     "checking": "Verificando Ollama...",
     "notRunning": "Ollama no está en ejecución",
     "notRunningDesc": "Esta aplicación necesita Ollama para gestionar modelos de IA. Instálalo para comenzar.",
-    "install": "Instalar Ollama",
-    "models": "Modelos Instalados",
-    "modelsCount": "modelos"
+    "summary": "Gestiona y ejecuta modelos de IA ligeros localmente con Ollama. Explora los modelos recomendados, instálalos con un clic y ejecútalos directamente desde esta aplicación.",
+    "install": "Instalar",
+    "installing": "Instalando...",
+    "run": "Ejecutar",
+    "running": "Ejecutando...",
+    "category": {
+      "chat": "Chat y Texto",
+      "code": "Código"
+    },
+    "catalog": {
+      "chat": {
+        "llama32": "Modelo ligero de propósito general, bueno para conversación",
+        "phi3": "Modelo pequeño eficiente de Microsoft, buena capacidad de razonamiento",
+        "tinyllama": "Ultraligero, funciona en casi cualquier hardware",
+        "gemma2": "Modelo compacto de Google, gran calidad de texto",
+        "mistral": "Popular modelo de 7B, excelente para chat y escritura"
+      },
+      "code": {
+        "deepseek13": "Modelo de código pequeño, rápido y sorprendentemente capaz",
+        "deepseek67": "Completado y explicación de código sólidos",
+        "starcoder2": "Generador de código open-source ligero",
+        "qwen15": "Codificador pequeño de Alibaba, bueno para tareas simples",
+        "codegemma": "Modelo compacto de Google enfocado en código"
+      }
+    }
   }
 }

@@ -31,8 +31,30 @@
     "checking": "Checking Ollama...",
     "notRunning": "Ollama is not running",
     "notRunningDesc": "This app requires Ollama to manage AI models. Install it to get started.",
-    "install": "Install Ollama",
-    "models": "Installed Models",
-    "modelsCount": "models"
+    "summary": "Manage and run lightweight AI models locally with Ollama. Browse the recommended models below, install with one click, and run them directly from this application.",
+    "install": "Install",
+    "installing": "Installing...",
+    "run": "Run",
+    "running": "Running...",
+    "category": {
+      "chat": "Chat & Text",
+      "code": "Code"
+    },
+    "catalog": {
+      "chat": {
+        "llama32": "Lightweight general-purpose model, good for conversation",
+        "phi3": "Microsoft's efficient small model, strong reasoning",
+        "tinyllama": "Ultra-lightweight, runs on almost any hardware",
+        "gemma2": "Google's compact model, great text quality",
+        "mistral": "Popular 7B model, excellent for chat and writing"
+      },
+      "code": {
+        "deepseek13": "Tiny code model, fast and surprisingly capable",
+        "deepseek67": "Solid code completion and explanation",
+        "starcoder2": "Lightweight open-source code generator",
+        "qwen15": "Alibaba's small coder, good for simple tasks",
+        "codegemma": "Google's code-focused compact model"
+      }
+    }
   }
 }

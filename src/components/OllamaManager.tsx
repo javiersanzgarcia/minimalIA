@@ -1,21 +1,21 @@
-import { useTranslation } from "react-i18next"
-import { useOllamaStatus } from "../hooks/use-ollama"
-import { InstallOllama } from "./ollama/InstallOllama"
+import { useTranslation } from "react-i18next";
+import { useOllamaStatus } from "../hooks/use-ollama";
+import { InstallOllama } from "./ollama/InstallOllama";
 
 export function OllamaManager() {
-  const { t } = useTranslation()
-  const { data: models, isLoading, error } = useOllamaStatus()
+  const { t } = useTranslation();
+  const { data: models, isLoading, error } = useOllamaStatus();
 
   if (isLoading) {
     return (
-      <section className="text-center py-20">
+      <section className="text-center py-20 mb-8">
         <p className="text-[var(--elevate-muted)]">{t("ollama.checking")}</p>
       </section>
-    )
+    );
   }
 
   if (error) {
-    return <InstallOllama />
+    return <InstallOllama />;
   }
 
   return (
@@ -47,5 +47,5 @@ export function OllamaManager() {
         ))}
       </div>
     </section>
-  )
+  );
 }
