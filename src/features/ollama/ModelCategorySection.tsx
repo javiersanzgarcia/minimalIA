@@ -46,7 +46,10 @@ export function ModelCategorySection({
                     onInstall={() => manager.install(fullName)}
                     onRun={() => manager.startChat(fullName, category)}
                     onStop={() => manager.stopChat(category)}
-                    onUninstall={() => manager.uninstall(fullName)}
+                    onUninstall={() => {
+                      if (isActive(fullName)) manager.stopChat(category)
+                      manager.uninstall(fullName)
+                    }}
                     isInstalled={manager.isInstalled(fullName)}
                     isPulling={manager.isInstalling(fullName)}
                     isActive={isActive(fullName)}

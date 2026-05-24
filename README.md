@@ -2,6 +2,8 @@
 
 **minimalIA** es un gestor de modelos de IA lanzados con **Ollama**. Construido con **Tauri v2** (Rust) + **React** (TypeScript), permite instalar, ejecutar y desinstalar modelos locales de forma sencilla. Si Ollama no está en ejecución, la aplicación te guía para instalarlo.
 
+![Captura de pantalla](./screenshots/minimalIA.png)
+
 ---
 
 ## Roadmap
@@ -82,6 +84,35 @@
 - [x] Aplicar KISS: estructura plana, imports cortos (`./api` vs `../../hooks/use-ollama`)
 - [x] Biome y TypeScript pasan sin errores
 
+### Fase 9 — Sistema e información del sistema
+
+- [x] Comando Rust `get_system_info` con `sysinfo` crate — detecta OS, CPU, RAM
+- [x] Detección de GPU multiplataforma: Linux (sysfs + lspci + nvidia-smi), macOS (`system_profiler`), Windows (PowerShell + wmic)
+- [x] Componente `SystemInfo` con información de sistema y modelos recomendados
+- [x] Recomendación dinámica de modelos según RAM/VRAM máxima
+- [x] Ordenación de modelos: el recomendado aparece primero
+- [x] Estrella SVG + badge "Recommended" en el modelo recomendado
+
+### Fase 10 — Chat con modelos
+
+- [x] `ChatView` con historial de mensajes, input y botón enviar
+- [x] Integración con `POST /api/generate` de Ollama
+- [x] AbortController para cancelar generación en curso
+- [x] Auto-scroll al último mensaje mediante `useEffect`
+- [x] Botón "Stop" en cabecera para cerrar el chat
+- [x] Botón "Detener generación" que aborta la respuesta sin cerrar el chat
+- [x] Al desinstalar un modelo con el chat abierto, primero se cierra el chat
+
+### Fase 11 — Asistente de código con contexto de repositorio
+
+- [x] Campo de ruta de repositorio en el chat de código
+- [x] Validación de ruta contra el sistema de archivos (`validate_path`)
+- [x] Comando Rust `get_repo_context` — escanea el directorio (3 niveles, salta `.`/`node_modules`/`target`)
+- [x] Lectura de archivos clave (`package.json`, `Cargo.toml`, `README.md`, etc.)
+- [x] Indicador visual de ruta válida/inválida (✓/✗)
+- [x] Contexto visible en el chat como mensaje "Repositorio: /ruta"
+- [x] El modelo recibe el árbol del proyecto + contenido de archivos clave
+
 ---
 
 ## Referencias
@@ -156,10 +187,14 @@ minimalIA/
 │   │   │   ├── api.ts          # Hooks de API (useOllamaStatus, usePullModel, etc.)
 │   │   │   ├── catalog.ts      # Catálogo de modelos recomendados
 │   │   │   ├── manager.ts      # Hook useModelManager (estado y operaciones)
+│   │   │   ├── ChatView.tsx    # Ventana de chat con historial
 │   │   │   ├── InstallOllama.tsx
 │   │   │   ├── ModelCard.tsx
 │   │   │   ├── ModelCategorySection.tsx
-│   │   │   └── OllamaManager.tsx
+│   │   │   ├── OllamaManager.tsx
+│   │   │   ├── SystemInfo.tsx
+│   │   │   ├── system.ts       # Detección de sistema y recomendaciones
+│   │   │   └── use-system-specs.ts
 │   │   ├── theme/          # Modo oscuro/claro
 │   │   │   ├── store.ts        # Estado del tema (Zustand)
 │   │   │   └── ThemeToggle.tsx

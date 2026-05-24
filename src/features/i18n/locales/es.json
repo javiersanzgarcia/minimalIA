@@ -39,6 +39,7 @@
     "run": "Ejecutar",
     "stop": "Detener",
     "send": "Enviar",
+    "stopGen": "Detener generación",
     "thinking": "Pensando...",
     "chatPlaceholder": "Envía un mensaje para empezar a chatear",
     "chatInput": "Escribe un mensaje...",

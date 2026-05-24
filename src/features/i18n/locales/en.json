@@ -39,6 +39,7 @@
     "run": "Run",
     "stop": "Stop",
     "send": "Send",
+    "stopGen": "Stop generation",
     "thinking": "Thinking...",
     "chatPlaceholder": "Send a message to start chatting",
     "chatInput": "Type a message...",

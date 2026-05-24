@@ -206,14 +206,25 @@ export function ChatView({
           placeholder={t("ollama.chatInput")}
           className="flex-1 bg-[var(--elevate-bg)] border border-[var(--elevate-input-border)] rounded px-3 py-2 text-sm text-[var(--elevate-text)] outline-none"
         />
-        <button
-          type="button"
-          className="button-primary !py-1.5 !px-3 !text-xs !h-auto !leading-tight"
-          onClick={handleSend}
-          disabled={loading || !input.trim()}
-        >
-          {t("ollama.send")}
-        </button>
+        <div className="flex flex-col gap-1">
+          <button
+            type="button"
+            className="button-primary !py-1.5 !px-3 !text-xs !h-auto !leading-tight"
+            onClick={handleSend}
+            disabled={loading || !input.trim()}
+          >
+            {t("ollama.send")}
+          </button>
+          {loading && (
+            <button
+              type="button"
+              className="!py-1 !px-3 !text-[10px] !h-auto !leading-none !bg-transparent !border !border-[var(--elevate-border)] !text-[var(--elevate-muted)] hover:!text-[var(--elevate-text)]"
+              onClick={() => abortRef.current?.abort()}
+            >
+              {t("ollama.stopGen")}
+            </button>
+          )}
+        </div>
       </div>
     </div>
   )
