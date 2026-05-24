@@ -34,6 +34,14 @@ A desktop application built with **Tauri v2** (Rust) + **React** (TypeScript) �
 - [x] Aplica clase `dark` en `<html>` para activar variables CSS del tema oscuro
 - [x] Alternar tema con botón sol/luna en el header
 - [x] Variables CSS adaptadas para light/dark en `elevate-theme.css`
+- [x] Extraer `ThemeToggle` a `src/components/ThemeToggle.tsx` como <button> semántico
+
+### Fase 5 — Tooling y refactor
+
+- [x] Instalar **Biome** (`@biomejs/biome`) como linter + formateador
+- [x] Configurar `biome.json` — sin punto y coma (`semicolons: "asNeeded"`), indentación space 2
+- [x] Reemplazar todos los `style={}` inline por clases Tailwind con valores arbitrarios (`bg-[var(--elevate-bg)]`, `font-[roboto-black]`, etc.)
+- [x] Corregir colisión de capas CSS: `@layer utilities` de Tailwind v4 vs reglas sin capa de elevate-theme.css — usar `!` prefix en clases para `!important`
 
 ---
 
@@ -86,6 +94,12 @@ npm run dev
 
 El comando `npm run tauri dev` levanta Vite en el puerto 1420 y abre la ventana nativa de Tauri con hot-reload en ambos lados (Rust y React).
 
+```sh
+# Linting y formato con Biome
+npm run lint
+npm run format
+```
+
 ---
 
 ## Estructura del proyecto
@@ -94,6 +108,8 @@ El comando `npm run tauri dev` levanta Vite en el puerto 1420 y abre la ventana 
 minimalIA/
 ├── src/                    # Frontend React + TypeScript
 │   ├── assets/fonts/       # Fuentes Roboto y Domine (woff/woff2)
+│   ├── components/
+│   │   └── ThemeToggle.tsx  # Botón de cambio de tema
 │   ├── styles/
 │   │   ├── elevate-fonts.css
 │   │   ├── elevate-base.css
@@ -108,6 +124,7 @@ minimalIA/
 │   ├── Cargo.toml
 │   └── tauri.conf.json
 ├── index.html
+├── biome.json               # Configuración de Biome (linter + formateador)
 ├── package.json
 ├── vite.config.ts
 └── README.md

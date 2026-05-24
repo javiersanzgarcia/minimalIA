@@ -7,7 +7,7 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={toggle}
-      className="opacity-70 hover:opacity-100 transition-opacity cursor-pointer mt-0 mb-5 text-[var(--elevate-heading)] bg-transparent border-none p-0 h-auto leading-none"
+      className="opacity-70 hover:opacity-100 transition-opacity cursor-pointer mt-0 mb-5 text-[var(--elevate-heading)] hover:!text-[var(--elevate-heading)] !bg-transparent hover:!bg-transparent border-none p-0 h-auto leading-none"
       aria-label={
         theme === "light" ? "Switch to dark mode" : "Switch to light mode"
       }
