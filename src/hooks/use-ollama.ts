@@ -39,6 +39,12 @@ export function usePullModel() {
         body: JSON.stringify({ name: modelName }),
       })
       if (!res.ok) throw new Error(`Failed to pull model ${modelName}`)
+      const reader = res.body?.getReader()
+      if (!reader) return
+      while (true) {
+        const { done } = await reader.read()
+        if (done) break
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["ollama-models"] })
@@ -60,6 +66,23 @@ export function useRunModel() {
       if (!res.ok) throw new Error(`Failed to run model ${modelName}`)
       const data = await res.json()
       return data.response as string
+    },
+  })
+}
+
+export function useDeleteModel() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (modelName: string) => {
+      const res = await fetch(`${OLLAMA_BASE}/api/delete`, {
+        method: "DELETE",
+        body: JSON.stringify({ name: modelName }),
+      })
+      if (!res.ok) throw new Error(`Failed to delete model ${modelName}`)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["ollama-models"] })
     },
   })
 }

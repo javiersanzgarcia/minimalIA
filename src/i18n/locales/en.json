@@ -36,6 +36,8 @@
     "installing": "Installing...",
     "run": "Run",
     "running": "Running...",
+    "uninstall": "Uninstall",
+    "uninstalling": "Uninstalling...",
     "category": {
       "chat": "Chat & Text",
       "code": "Code"

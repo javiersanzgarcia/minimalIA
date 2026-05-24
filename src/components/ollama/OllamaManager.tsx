@@ -1,101 +1,57 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
+import type { CatalogModel } from "../../data/models"
+import { chatModels, codeModels, modelFullName } from "../../data/models"
 import {
+  useDeleteModel,
   useOllamaStatus,
   usePullModel,
   useRunModel,
 } from "../../hooks/use-ollama"
 import { InstallOllama } from "./InstallOllama"
-import { chatModels, codeModels, modelFullName } from "./models"
-
-function ModelCard({
-  modelName,
-  tag,
-  size,
-  descriptionKey,
-  onInstall,
-  onRun,
-  isInstalled,
-  isPulling,
-  isRunning,
-  result,
-}: {
-  modelName: string
-  tag: string
-  size: string
-  descriptionKey: string
-  onInstall: () => void
-  onRun: () => void
-  isInstalled: boolean
-  isPulling: boolean
-  isRunning: boolean
-  result: string | null
-}) {
-  const { t } = useTranslation()
-  const fullName = modelFullName({ name: modelName, tag, size, descriptionKey })
-
-  return (
-    <div className="flex flex-col p-4 rounded-lg bg-[var(--elevate-input-bg)] w-full min-h-[190px] mb-3">
-      <div className="flex items-start justify-between gap-2">
-        <div>
-          <h3 className="font-[roboto-medium] text-[var(--elevate-heading)]">
-            {fullName}
-          </h3>
-          <p className="text-sm text-[var(--elevate-muted)]">{size}</p>
-        </div>
-        <div className="shrink-0">
-          {isInstalled ? (
-            <button
-              type="button"
-              className="button-primary !py-2 !px-4 !text-xs !h-auto"
-              onClick={onRun}
-              disabled={isRunning}
-            >
-              {isRunning ? t("ollama.running") : t("ollama.run")}
-            </button>
-          ) : (
-            <button
-              type="button"
-              className="button-primary !py-2 !px-4 !text-xs !h-auto"
-              onClick={onInstall}
-              disabled={isPulling}
-            >
-              {isPulling ? t("ollama.installing") : t("ollama.install")}
-            </button>
-          )}
-        </div>
-      </div>
-      <p className="text-xs text-[var(--elevate-muted)] mt-2 flex-1">
-        {t(descriptionKey)}
-      </p>
-      {result && (
-        <p className="mt-auto text-sm text-[var(--elevate-text)] border-t border-[var(--elevate-border)] pt-3">
-          {result}
-        </p>
-      )}
-    </div>
-  )
-}
+import { ModelCard } from "./ModelCard"
 
 export function OllamaManager() {
   const { t } = useTranslation()
   const { data: installed, isLoading, error } = useOllamaStatus()
   const pullModel = usePullModel()
   const runModel = useRunModel()
+  const deleteModel = useDeleteModel()
   const [results, setResults] = useState<Record<string, string>>({})
+  const [installingModels, setInstallingModels] = useState<
+    Record<string, boolean>
+  >({})
+  const [runningModel, setRunningModel] = useState<{
+    chat: string | null
+    code: string | null
+  }>({ chat: null, code: null })
 
   const isInstalled = (fullName: string) =>
     installed?.some(
       (m) => m.name === fullName || m.name.startsWith(`${fullName}:`),
     ) ?? false
 
-  const handleInstall = (fullName: string) => {
-    pullModel.mutate(fullName)
+  const handleInstall = async (fullName: string) => {
+    setInstallingModels((prev) => ({ ...prev, [fullName]: true }))
+    try {
+      await pullModel.mutateAsync(fullName)
+    } catch {
+      // error handled — model stays uninstalled, button returns to "Install"
+    } finally {
+      setInstallingModels((prev) => ({ ...prev, [fullName]: false }))
+    }
   }
 
-  const handleRun = async (fullName: string) => {
-    const res = await runModel.mutateAsync(fullName)
-    setResults((prev) => ({ ...prev, [fullName]: res }))
+  const handleRun = async (fullName: string, category: "chat" | "code") => {
+    setRunningModel((prev) => ({ ...prev, [category]: fullName }))
+    try {
+      const res = await runModel.mutateAsync(fullName)
+      setResults((prev) => ({ ...prev, [fullName]: res }))
+    } catch {
+      // error handled — button returns to "Run"
+    } finally {
+      setRunningModel((prev) => ({ ...prev, [category]: null }))
+    }
   }
 
   if (isLoading) {
@@ -110,21 +66,26 @@ export function OllamaManager() {
     return <InstallOllama />
   }
 
-  const renderCardList = (models: typeof chatModels) =>
+  const renderCardList = (models: CatalogModel[], category: "chat" | "code") =>
     models.map((m) => {
       const fullName = modelFullName(m)
+      const isThisPulling = installingModels[fullName] ?? false
+      const isThisRunning = runningModel[category] === fullName
+      const isCategoryBusy = runningModel[category] !== null
       return (
         <ModelCard
           key={fullName}
-          modelName={m.name}
-          tag={m.tag}
-          size={m.size}
-          descriptionKey={m.descriptionKey}
+          model={m}
           onInstall={() => handleInstall(fullName)}
-          onRun={() => handleRun(fullName)}
+          onRun={() => handleRun(fullName, category)}
+          onUninstall={() => deleteModel.mutate(fullName)}
           isInstalled={isInstalled(fullName)}
-          isPulling={pullModel.isPending && pullModel.variables === fullName}
-          isRunning={runModel.isPending && runModel.variables === fullName}
+          isPulling={isThisPulling}
+          isRunning={isThisRunning}
+          runDisabled={isCategoryBusy && !isThisRunning}
+          isUninstalling={
+            deleteModel.isPending && deleteModel.variables === fullName
+          }
           result={results[fullName] ?? null}
         />
       )
@@ -142,7 +103,7 @@ export function OllamaManager() {
             {t("ollama.category.chat")}
           </h2>
           <div className="flex flex-col">
-            {renderCardList(chatModels)}
+            {renderCardList(chatModels, "chat")}
           </div>
         </section>
 
@@ -151,7 +112,7 @@ export function OllamaManager() {
             {t("ollama.category.code")}
           </h2>
           <div className="flex flex-col">
-            {renderCardList(codeModels)}
+            {renderCardList(codeModels, "code")}
           </div>
         </section>
       </div>
