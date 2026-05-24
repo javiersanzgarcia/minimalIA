@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { sendChatMessage } from "./api"
 import { getRepoContext, validateRepoPath } from "./system"
@@ -30,7 +30,9 @@ export function ChatView({
   const abortRef = useRef<AbortController | null>(null)
   const endRef = useRef<HTMLDivElement | null>(null)
 
-  const scrollToEnd = () => endRef.current?.scrollIntoView()
+  useEffect(() => {
+    endRef.current?.scrollIntoView()
+  })
 
   const checkRepoPath = useCallback(async (path: string) => {
     if (!path.trim()) {
@@ -103,7 +105,6 @@ export function ChatView({
     } finally {
       setLoading(false)
       abortRef.current = null
-      setTimeout(scrollToEnd, 0)
     }
   }
 
@@ -160,7 +161,7 @@ export function ChatView({
         </button>
       </div>
 
-      <div className="flex flex-col gap-2 p-4 h-[500px] overflow-y-auto">
+      <div className="flex flex-col gap-2 p-4 h-[475px] overflow-y-auto">
         {messages.length === 0 && (
           <p className="text-sm text-[var(--elevate-muted)] text-center py-8">
             {t("ollama.chatPlaceholder")}
