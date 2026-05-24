@@ -1,6 +1,6 @@
-import { LangToggle } from "./components/lang/LangToggle"
-import { OllamaManager } from "./components/ollama/OllamaManager"
-import { ThemeToggle } from "./components/theme/ThemeToggle"
+import { LangToggle } from "./features/i18n/LangToggle"
+import { OllamaManager } from "./features/ollama/OllamaManager"
+import { ThemeToggle } from "./features/theme/ThemeToggle"
 import "./App.css"
 
 function App() {

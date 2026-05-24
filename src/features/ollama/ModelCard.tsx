@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next"
-import type { CatalogModel } from "../../data/models"
-import { modelFullName } from "../../data/models"
+import type { CatalogModel } from "./catalog"
+import { modelFullName } from "./catalog"
 
 export function ModelCard({
   model,

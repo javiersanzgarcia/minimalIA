@@ -5,7 +5,7 @@ import App from "./App"
 import "./styles/elevate-fonts.css"
 import "./styles/elevate-base.css"
 import "./styles/elevate-theme.css"
-import "./i18n/i18n"
+import "./features/i18n/i18n"
 
 const queryClient = new QueryClient()
 
