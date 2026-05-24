@@ -35,7 +35,7 @@ function ModelCard({
   const fullName = modelFullName({ name: modelName, tag, size, descriptionKey })
 
   return (
-    <div className="flex flex-col p-4 rounded-lg bg-[var(--elevate-input-bg)] w-full min-h-[190px]">
+    <div className="flex flex-col p-4 rounded-lg bg-[var(--elevate-input-bg)] w-full min-h-[190px] mb-3">
       <div className="flex items-start justify-between gap-2">
         <div>
           <h3 className="font-[roboto-medium] text-[var(--elevate-heading)]">
@@ -141,7 +141,7 @@ export function OllamaManager() {
           <h2 className="text-xl font-[domine-bold] text-[var(--elevate-heading)] mb-4 text-center">
             {t("ollama.category.chat")}
           </h2>
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col">
             {renderCardList(chatModels)}
           </div>
         </section>
@@ -150,7 +150,7 @@ export function OllamaManager() {
           <h2 className="text-xl font-[domine-bold] text-[var(--elevate-heading)] mb-4 text-center">
             {t("ollama.category.code")}
           </h2>
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col">
             {renderCardList(codeModels)}
           </div>
         </section>
