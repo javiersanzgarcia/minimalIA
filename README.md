@@ -1,6 +1,6 @@
 # minimalIA
 
-A desktop application built with **Tauri v2** (Rust) + **React** (TypeScript) — a side project to learn Rust integration in a modern cross-platform app.
+**minimalIA** es un gestor de modelos de IA lanzados con **Ollama**. Construido con **Tauri v2** (Rust) + **React** (TypeScript), permite listar, instalar y administrar modelos locales de una manera sencilla. Si Ollama no está en ejecución, la aplicación te guía para instalarlo.
 
 ---
 
@@ -51,6 +51,13 @@ A desktop application built with **Tauri v2** (Rust) + **React** (TypeScript) �
 - [x] Crear `LangToggle` — botón EN/ES a la derecha del selector de tema
 - [x] Reemplazar textos estáticos por `useTranslation()` en App.tsx y ThemeToggle
 
+### Fase 7 — Gestor de modelos Ollama
+
+- [x] Detectar si Ollama está en ejecución (`GET /api/tags` a `localhost:11434`)
+- [x] Mostrar botón "Instalar Ollama" con enlace a `ollama.com/download` si no está disponible
+- [x] Listar modelos instalados con nombre y tamaño
+- [x] Reemplazar contenido plantilla por gestor de modelos
+
 ---
 
 ## Referencias
@@ -64,6 +71,7 @@ A desktop application built with **Tauri v2** (Rust) + **React** (TypeScript) �
 | **[@tanstack/react-query](https://tanstack.com/query/latest)** | Data fetching y caché asíncrona |
 | **[Zustand](https://github.com/pmndrs/zustand)** | Estado global liviano |
 | **[react-i18next](https://react.i18next.com)** | Internacionalización (i18n) con detección de idioma del navegador |
+| **[Ollama](https://ollama.com)** | Ejecución local de modelos de IA |
 | **[Biome](https://biomejs.dev)** | Linter y formateador de código |
 | **[Elevate10](https://www.styleshout.com)** | Plantilla landing page — fuentes Roboto/Domine, sistema de diseño base |
 | **Font Awesome** | (disponible en Elevate, no usado — se prefieren SVG inline) |
@@ -74,6 +82,7 @@ A desktop application built with **Tauri v2** (Rust) + **React** (TypeScript) �
 
 - **Rust** (≥1.70) con `cargo`
 - **Node.js** (≥18) con `npm`
+- **Ollama** — [Descargar e instalar](https://ollama.com/download)
 - **Linux**: `libwebkit2gtk-4.1-dev`, `librsvg2-dev`, `build-essential`, `libssl-dev`, `libayatana-appindicator3-dev`
 
 ```sh
@@ -119,8 +128,15 @@ minimalIA/
 ├── src/                    # Frontend React + TypeScript
 │   ├── assets/fonts/       # Fuentes Roboto y Domine (woff/woff2)
 │   ├── components/
-│   │   ├── LangToggle.tsx   # Selector de idioma EN/ES
-│   │   └── ThemeToggle.tsx  # Botón de cambio de tema
+│   │   ├── theme/
+│   │   │   └── ThemeToggle.tsx   # Botón de cambio de tema
+│   │   ├── lang/
+│   │   │   └── LangToggle.tsx    # Selector de idioma EN/ES
+│   │   └── ollama/
+│   │       ├── InstallOllama.tsx # Botón de instalación de Ollama
+│   │       └── OllamaManager.tsx # Gestor de modelos Ollama
+│   ├── hooks/
+│   │   └── use-ollama.ts     # Hook para consultar API de Ollama
 │   ├── i18n/
 │   │   ├── i18n.ts          # Configuración de react-i18next
 │   │   └── locales/

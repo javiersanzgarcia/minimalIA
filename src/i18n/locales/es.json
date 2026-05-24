@@ -26,5 +26,13 @@
   },
   "lang": {
     "switchTo": "Cambiar idioma"
+  },
+  "ollama": {
+    "checking": "Verificando Ollama...",
+    "notRunning": "Ollama no está en ejecución",
+    "notRunningDesc": "Esta aplicación necesita Ollama para gestionar modelos de IA. Instálalo para comenzar.",
+    "install": "Instalar Ollama",
+    "models": "Modelos Instalados",
+    "modelsCount": "modelos"
   }
 }

@@ -26,5 +26,13 @@
   },
   "lang": {
     "switchTo": "Switch language"
+  },
+  "ollama": {
+    "checking": "Checking Ollama...",
+    "notRunning": "Ollama is not running",
+    "notRunningDesc": "This app requires Ollama to manage AI models. Install it to get started.",
+    "install": "Install Ollama",
+    "models": "Installed Models",
+    "modelsCount": "models"
   }
 }
