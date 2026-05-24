@@ -23,7 +23,7 @@ export function OllamaManager() {
   }
 
   return (
-    <div className="w-full px-4">
+    <div className="w-full">
       <p className="text-[var(--elevate-muted)] text-balance text-center mb-8">
         {t("ollama.summary")}
       </p>

@@ -1,6 +1,6 @@
 # minimalIA
 
-**minimalIA** es un gestor de modelos de IA lanzados con **Ollama**. Construido con **Tauri v2** (Rust) + **React** (TypeScript), permite listar, instalar y administrar modelos locales de una manera sencilla. Si Ollama no está en ejecución, la aplicación te guía para instalarlo.
+**minimalIA** es un gestor de modelos de IA lanzados con **Ollama**. Construido con **Tauri v2** (Rust) + **React** (TypeScript), permite instalar, ejecutar y desinstalar modelos locales de forma sencilla. Si Ollama no está en ejecución, la aplicación te guía para instalarlo.
 
 ---
 
@@ -17,7 +17,7 @@
 
 - [x] Integrar **@tanstack/react-query** (React Query v5) — `QueryClientProvider` en `main.tsx`
 - [x] Integrar **zustand** para manejo de estado global
-- [x] Store de ejemplo: `src/store/use-counter.ts` → migrado a `src/store/use-theme.ts`
+- [x] Store de ejemplo: `src/store/use-counter.ts` → migrado a `src/features/theme/store.ts`
 
 ### Fase 3 — Sistema de diseño Elevate
 
@@ -34,7 +34,7 @@
 - [x] Aplica clase `dark` en `<html>` para activar variables CSS del tema oscuro
 - [x] Alternar tema con botón sol/luna en el header
 - [x] Variables CSS adaptadas para light/dark en `elevate-theme.css`
-- [x] Extraer `ThemeToggle` a `src/components/ThemeToggle.tsx` como <button> semántico
+- [x] Extraer `ThemeToggle` a `src/features/theme/ThemeToggle.tsx` como <button> semántico
 
 ### Fase 5 — Tooling y refactor
 
@@ -48,7 +48,7 @@
 - [x] Instalar `react-i18next` + `i18next` + `i18next-browser-languagedetector`
 - [x] Crear `src/i18n/i18n.ts` con configuración (fallback inglés, detección automática)
 - [x] Crear traducciones EN/ES en `src/i18n/locales/`
-- [x] Crear `LangToggle` — botón EN/ES a la derecha del selector de tema
+- [x] Crear `LangToggle` en `src/features/i18n/LangToggle.tsx` — botón EN/ES a la derecha del selector de tema
 - [x] Reemplazar textos estáticos por `useTranslation()` en App.tsx y ThemeToggle
 
 ### Fase 7 — Gestor de modelos Ollama
@@ -61,6 +61,26 @@
 - [x] Botón "Instalar" que descarga el modelo vía `POST /api/pull`
 - [x] Botón "Ejecutar" que prueba el modelo vía `POST /api/generate`
 - [x] Los modelos instalados se detectan automáticamente y muestran "Ejecutar" en vez de "Instalar"
+- [x] Spinner de carga + texto "Instalando..." en el botón mientras se descarga un modelo
+- [x] Solo un modelo puede instalarse a la vez; los demás botones se deshabilitan
+- [x] Solo un modelo por categoría (chat/code) puede ejecutarse a la vez
+- [x] Botón "Desinstalar" junto a "Ejecutar" para eliminar modelos vía `DELETE /api/delete`
+- [x] Errores manejados silenciosamente — los botones vuelven a su estado inicial
+- [x] Extraer `ModelCard` y `ModelCategorySection` como componentes independientes
+- [x] Extraer `useModelManager` hook que encapsula toda la lógica de estado (instalando, ejecutando, resultados)
+
+### Fase 8 — Refactor de arquitectura (Screaming Architecture + SOLID)
+
+- [x] Eliminar `src/components/OllamaManager.tsx` duplicado (no importado)
+- [x] Mover `models.ts` a `src/features/ollama/catalog.ts` (separar datos de componentes)
+- [x] Renombrar `use-ollama.ts` → `api.ts`, `use-model-manager.ts` → `manager.ts`
+- [x] Agrupar todo el código de Ollama en `src/features/ollama/` (componentes, hooks, catálogo)
+- [x] Mover tema a `src/features/theme/` (store + componente juntos)
+- [x] Mover i18n a `src/features/i18n/` (config + locales + LangToggle juntos)
+- [x] Eliminar directorios genéricos `components/`, `hooks/`, `data/`, `store/`
+- [x] Aplicar principios SOLID: SRP, OCP, DIP
+- [x] Aplicar KISS: estructura plana, imports cortos (`./api` vs `../../hooks/use-ollama`)
+- [x] Biome y TypeScript pasan sin errores
 
 ---
 
@@ -131,28 +151,28 @@ npm run format
 minimalIA/
 ├── src/                    # Frontend React + TypeScript
 │   ├── assets/fonts/       # Fuentes Roboto y Domine (woff/woff2)
-│   ├── components/
-│   │   ├── theme/
-│   │   │   └── ThemeToggle.tsx   # Botón de cambio de tema
-│   │   ├── lang/
-│   │   │   └── LangToggle.tsx    # Selector de idioma EN/ES
-│   │   └── ollama/
-│   │       ├── InstallOllama.tsx # Botón de instalación de Ollama
-│   │       ├── models.ts         # Catálogo de modelos recomendados
-│   │       └── OllamaManager.tsx # Gestor de modelos Ollama
-│   ├── hooks/
-│   │   └── use-ollama.ts     # Hook para consultar API de Ollama
-│   ├── i18n/
-│   │   ├── i18n.ts          # Configuración de react-i18next
-│   │   └── locales/
-│   │       ├── en.json      # Traducciones inglés
-│   │       └── es.json      # Traducciones español
+│   ├── features/
+│   │   ├── ollama/         # Gestión de modelos Ollama
+│   │   │   ├── api.ts          # Hooks de API (useOllamaStatus, usePullModel, etc.)
+│   │   │   ├── catalog.ts      # Catálogo de modelos recomendados
+│   │   │   ├── manager.ts      # Hook useModelManager (estado y operaciones)
+│   │   │   ├── InstallOllama.tsx
+│   │   │   ├── ModelCard.tsx
+│   │   │   ├── ModelCategorySection.tsx
+│   │   │   └── OllamaManager.tsx
+│   │   ├── theme/          # Modo oscuro/claro
+│   │   │   ├── store.ts        # Estado del tema (Zustand)
+│   │   │   └── ThemeToggle.tsx
+│   │   └── i18n/           # Internacionalización EN/ES
+│   │       ├── i18n.ts         # Configuración de react-i18next
+│   │       ├── LangToggle.tsx   # Selector de idioma
+│   │       └── locales/
+│   │           ├── en.json      # Traducciones inglés
+│   │           └── es.json      # Traducciones español
 │   ├── styles/
 │   │   ├── elevate-fonts.css
 │   │   ├── elevate-base.css
 │   │   └── elevate-theme.css
-│   ├── store/
-│   │   └── use-theme.ts    # Estado del tema (Zustand)
 │   ├── App.tsx
 │   ├── App.css
 │   └── main.tsx
