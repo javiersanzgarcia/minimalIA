@@ -1,0 +1,30 @@
+{
+  "app": {
+    "tagline": "Tauri + React",
+    "headline": "The perfect template to present your awesome product.",
+    "description": "Built with Rust, Tauri, React, TypeScript, Tailwind CSS, React Query, and Zustand. Featuring the Elevate design system."
+  },
+  "hero": {
+    "getStarted": "Get Started",
+    "learnMore": "Learn More"
+  },
+  "features": {
+    "rustCore": "Rust Core",
+    "rustCoreDesc": "High-performance backend logic compiled to native code via Tauri.",
+    "reactFrontend": "React Frontend",
+    "reactFrontendDesc": "Modern UI with React Query for data fetching and Zustand for state.",
+    "tailwind": "Tailwind CSS",
+    "tailwindDesc": "Utility-first styling with Elevate fonts and theme system."
+  },
+  "quote": {
+    "text": "Good design is as little design as possible.",
+    "author": "Dieter Rams"
+  },
+  "theme": {
+    "switchToDark": "Switch to dark mode",
+    "switchToLight": "Switch to light mode"
+  },
+  "lang": {
+    "switchTo": "Switch language"
+  }
+}

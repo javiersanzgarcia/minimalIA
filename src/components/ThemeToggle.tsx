@@ -1,15 +1,17 @@
+import { useTranslation } from "react-i18next"
 import { useTheme } from "../store/use-theme"
 
 export function ThemeToggle() {
   const { theme, toggle } = useTheme()
+  const { t } = useTranslation()
 
   return (
     <button
       type="button"
       onClick={toggle}
-      className="opacity-70 hover:opacity-100 transition-opacity cursor-pointer mt-0 mb-5 text-[var(--elevate-heading)] hover:!text-[var(--elevate-heading)] !bg-transparent hover:!bg-transparent border-none p-0 h-auto leading-none"
+      className="opacity-70 hover:opacity-100 transition-opacity cursor-pointer !m-0 text-[var(--elevate-heading)] hover:!text-[var(--elevate-heading)] !bg-transparent hover:!bg-transparent border-none !p-0 h-auto leading-none"
       aria-label={
-        theme === "light" ? "Switch to dark mode" : "Switch to light mode"
+        theme === "light" ? t("theme.switchToDark") : t("theme.switchToLight")
       }
     >
       {theme === "light" ? (

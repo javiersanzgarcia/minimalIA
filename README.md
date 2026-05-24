@@ -43,6 +43,14 @@ A desktop application built with **Tauri v2** (Rust) + **React** (TypeScript) �
 - [x] Reemplazar todos los `style={}` inline por clases Tailwind con valores arbitrarios (`bg-[var(--elevate-bg)]`, `font-[roboto-black]`, etc.)
 - [x] Corregir colisión de capas CSS: `@layer utilities` de Tailwind v4 vs reglas sin capa de elevate-theme.css — usar `!` prefix en clases para `!important`
 
+### Fase 6 — Internacionalización (i18n)
+
+- [x] Instalar `react-i18next` + `i18next` + `i18next-browser-languagedetector`
+- [x] Crear `src/i18n/i18n.ts` con configuración (fallback inglés, detección automática)
+- [x] Crear traducciones EN/ES en `src/i18n/locales/`
+- [x] Crear `LangToggle` — botón EN/ES a la derecha del selector de tema
+- [x] Reemplazar textos estáticos por `useTranslation()` en App.tsx y ThemeToggle
+
 ---
 
 ## Referencias
@@ -55,6 +63,8 @@ A desktop application built with **Tauri v2** (Rust) + **React** (TypeScript) �
 | **[Tailwind CSS v4](https://tailwindcss.com)** | Utilidades CSS, integrado via `@tailwindcss/vite` |
 | **[@tanstack/react-query](https://tanstack.com/query/latest)** | Data fetching y caché asíncrona |
 | **[Zustand](https://github.com/pmndrs/zustand)** | Estado global liviano |
+| **[react-i18next](https://react.i18next.com)** | Internacionalización (i18n) con detección de idioma del navegador |
+| **[Biome](https://biomejs.dev)** | Linter y formateador de código |
 | **[Elevate10](https://www.styleshout.com)** | Plantilla landing page — fuentes Roboto/Domine, sistema de diseño base |
 | **Font Awesome** | (disponible en Elevate, no usado — se prefieren SVG inline) |
 
@@ -109,7 +119,13 @@ minimalIA/
 ├── src/                    # Frontend React + TypeScript
 │   ├── assets/fonts/       # Fuentes Roboto y Domine (woff/woff2)
 │   ├── components/
+│   │   ├── LangToggle.tsx   # Selector de idioma EN/ES
 │   │   └── ThemeToggle.tsx  # Botón de cambio de tema
+│   ├── i18n/
+│   │   ├── i18n.ts          # Configuración de react-i18next
+│   │   └── locales/
+│   │       ├── en.json      # Traducciones inglés
+│   │       └── es.json      # Traducciones español
 │   ├── styles/
 │   │   ├── elevate-fonts.css
 │   │   ├── elevate-base.css
