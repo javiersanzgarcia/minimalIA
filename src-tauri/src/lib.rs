@@ -10,6 +10,18 @@ struct SystemInfo {
     vram_gb: u64,
 }
 
+#[derive(Serialize)]
+struct RepoContext {
+    tree: String,
+    files: Vec<FileContent>,
+}
+
+#[derive(Serialize)]
+struct FileContent {
+    path: String,
+    content: String,
+}
+
 // ── Linux GPU ──────────────────────────────────────────────────────────────
 
 #[cfg(target_os = "linux")]
@@ -196,6 +208,89 @@ fn get_gpu_info() -> (String, u64) {
     (String::from("Unknown"), 0)
 }
 
+const KEY_FILES: &[&str] = &[
+    "Cargo.toml",
+    "package.json",
+    "pyproject.toml",
+    "go.mod",
+    "README.md",
+    "README",
+    "docker-compose.yml",
+    "Dockerfile",
+    "Makefile",
+    "CMakeLists.txt",
+];
+
+fn walk_tree(path: &std::path::Path, depth: usize, max_depth: usize) -> String {
+    if depth > max_depth {
+        return String::new();
+    }
+    let Ok(entries) = std::fs::read_dir(path) else {
+        return String::new();
+    };
+    let mut result = String::new();
+    let mut dirs: Vec<_> = Vec::new();
+    let mut files: Vec<_> = Vec::new();
+    for entry in entries.flatten() {
+        let name = entry.file_name().to_string_lossy().to_string();
+        if name.starts_with('.') || name == "node_modules" || name == "target" {
+            continue;
+        }
+        if entry.file_type().map(|t| t.is_dir()).unwrap_or(false) {
+            dirs.push(name);
+        } else {
+            files.push(name);
+        }
+    }
+    dirs.sort();
+    files.sort();
+    let indent = "  ".repeat(depth);
+    for d in &dirs {
+        result.push_str(&format!("{}{}/\n", indent, d));
+        let sub = walk_tree(&path.join(d), depth + 1, max_depth);
+        result.push_str(&sub);
+    }
+    for f in &files {
+        result.push_str(&format!("{}{}\n", indent, f));
+    }
+    result
+}
+
+#[tauri::command]
+fn get_repo_context(path: String) -> Result<RepoContext, String> {
+    let p = std::path::Path::new(&path);
+    if !p.exists() || !p.is_dir() {
+        return Err("Directory does not exist".to_string());
+    }
+    let tree = walk_tree(p, 0, 3);
+    let mut files = Vec::new();
+    for key in KEY_FILES {
+        let fpath = p.join(key);
+        if fpath.exists() && fpath.is_file() {
+            let content = std::fs::read_to_string(&fpath).unwrap_or_default();
+            if content.len() > 10_000 {
+                files.push(FileContent {
+                    path: key.to_string(),
+                    content: format!("(truncated, {} bytes)", content.len()),
+                });
+            } else if !content.is_empty() {
+                files.push(FileContent {
+                    path: key.to_string(),
+                    content,
+                });
+            }
+        }
+    }
+    Ok(RepoContext { tree, files })
+}
+
+#[tauri::command]
+fn validate_path(path: String) -> bool {
+    std::fs::metadata(&path)
+        .map(|m| m.is_dir())
+        .unwrap_or(false)
+}
+
 #[tauri::command]
 fn get_system_info() -> SystemInfo {
     let mut sys = System::new_all();
@@ -228,7 +323,7 @@ fn get_system_info() -> SystemInfo {
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![get_system_info])
+        .invoke_handler(tauri::generate_handler![get_system_info, get_repo_context, validate_path])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

@@ -84,3 +84,39 @@ export function getRecommendedCode(specs: SystemSpecs): string {
   if (mem < 8) return "starcoder2:3b"
   return "deepseek-coder:6.7b"
 }
+
+export async function validateRepoPath(path: string): Promise<boolean> {
+  if (!path.trim()) return false
+  try {
+    const { invoke } = await import("@tauri-apps/api/core")
+    return await invoke<boolean>("validate_path", { path })
+  } catch {
+    try {
+      const req = await fetch(`file://${path}`)
+      return req.ok
+    } catch {
+      return false
+    }
+  }
+}
+
+interface RepoFileContent {
+  path: string
+  content: string
+}
+
+interface RepoContextResult {
+  tree: string
+  files: RepoFileContent[]
+}
+
+export async function getRepoContext(
+  path: string,
+): Promise<RepoContextResult | null> {
+  try {
+    const { invoke } = await import("@tauri-apps/api/core")
+    return await invoke<RepoContextResult>("get_repo_context", { path })
+  } catch {
+    return null
+  }
+}
