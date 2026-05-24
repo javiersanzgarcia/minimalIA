@@ -42,3 +42,12 @@ export async function getRepoContext(
     return null
   }
 }
+
+export async function startOllama(): Promise<void> {
+  try {
+    const { invoke } = await import("@tauri-apps/api/core")
+    await invoke("start_ollama")
+  } catch {
+    /* not running in Tauri */
+  }
+}

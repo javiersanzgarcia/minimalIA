@@ -113,6 +113,21 @@
 - [x] Contexto visible en el chat como mensaje "Repositorio: /ruta"
 - [x] El modelo recibe el árbol del proyecto + contenido de archivos clave
 
+### Fase 12 — Limpieza al cerrar la aplicación
+
+- [x] Al cerrar el chat, se descarga el modelo de la RAM de Ollama (`keep_alive: "0m"`)
+- [x] Al cerrar la ventana, `on_window_event` ejecuta `systemctl --user stop ollama`
+- [x] Se intenta `pkill ollama` y `sudo -n pkill ollama` como fallback
+- [x] Servicio de usuario systemd para Ollama (`~/.config/systemd/user/ollama.service`)
+- [x] Documentación de requisitos e instalación de Ollama como servicio de usuario
+
+### Fase 13 — Inicio automático de Ollama
+
+- [x] Comando Rust `start_ollama` que ejecuta `systemctl --user start ollama`
+- [x] Al abrir la app, si Ollama no responde, se intenta iniciar automáticamente
+- [x] Botón "Iniciar Ollama" en la pantalla de instalación para reintento manual
+- [x] Servicio de usuario con `loginctl enable-linger` para arranque automático al iniciar sesión
+
 ---
 
 ## Referencias
@@ -139,6 +154,43 @@
 - **Node.js** (≥18) con `npm`
 - **Ollama** — [Descargar e instalar](https://ollama.com/download)
 - **Linux**: `libwebkit2gtk-4.1-dev`, `librsvg2-dev`, `build-essential`, `libssl-dev`, `libayatana-appindicator3-dev`
+
+### Configurar Ollama como servicio de usuario (Linux)
+
+Para que la aplicación pueda detener Ollama al cerrarse, debe ejecutarse como **servicio de usuario systemd**. Si ya tienes Ollama instalado como servicio del sistema, migra al de usuario:
+
+```sh
+# Detener el servicio del sistema (si existe)
+sudo systemctl stop ollama
+sudo systemctl disable ollama
+
+# Crear el servicio de usuario
+mkdir -p ~/.config/systemd/user
+
+cat > ~/.config/systemd/user/ollama.service << 'EOF'
+[Unit]
+Description=Ollama Service
+After=network-online.target
+
+[Service]
+ExecStart=/usr/local/bin/ollama serve
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target
+EOF
+
+# Iniciar el servicio de usuario
+systemctl --user daemon-reload
+systemctl --user enable ollama
+systemctl --user start ollama
+
+# Asegurar que arranque al iniciar sesión
+loginctl enable-linger $(whoami)
+```
+
+> **Nota**: En macOS y Windows la app intentará detener Ollama mediante `pkill` / `taskkill` respectivamente.
 
 ```sh
 # Debian/Ubuntu

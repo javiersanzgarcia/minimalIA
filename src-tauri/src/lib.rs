@@ -322,22 +322,20 @@ fn get_system_info() -> SystemInfo {
 fn stop_ollama() {
     #[cfg(target_os = "linux")]
     {
-        // Try pkill (same user or sudo)
+        let _ = std::process::Command::new("systemctl")
+            .args(["--user", "stop", "ollama"])
+            .output();
         let _ = std::process::Command::new("pkill").arg("ollama").output();
         let _ = std::process::Command::new("sudo")
             .args(["-n", "pkill", "ollama"])
             .output();
-        // Try systemd stop
         let _ = std::process::Command::new("systemctl")
-            .args(["--user", "stop", "ollama"])
+            .args(["stop", "ollama"])
             .output();
     }
     #[cfg(target_os = "macos")]
     {
         let _ = std::process::Command::new("pkill").arg("ollama").output();
-        let _ = std::process::Command::new("sudo")
-            .args(["-n", "pkill", "ollama"])
-            .output();
     }
     #[cfg(target_os = "windows")]
     {
@@ -347,11 +345,25 @@ fn stop_ollama() {
     }
 }
 
+#[tauri::command]
+fn start_ollama() {
+    #[cfg(target_os = "linux")]
+    {
+        let _ = std::process::Command::new("systemctl")
+            .args(["--user", "start", "ollama"])
+            .output();
+    }
+    #[cfg(not(target_os = "linux"))]
+    {
+        let _ = std::process::Command::new("ollama").arg("serve").spawn();
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![get_system_info, get_repo_context, validate_path])
+        .invoke_handler(tauri::generate_handler![get_system_info, get_repo_context, validate_path, start_ollama])
         .on_window_event(|_window, event| {
             if let tauri::WindowEvent::CloseRequested { .. } = event {
                 stop_ollama();

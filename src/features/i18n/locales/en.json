@@ -31,6 +31,7 @@
     "checking": "Checking Ollama...",
     "notRunning": "Ollama is not running",
     "notRunningDesc": "This app requires Ollama to manage AI models. Install it to get started.",
+    "retry": "Start Ollama",
     "summary": "Manage and run lightweight AI models locally with Ollama. Browse the recommended models below, install with one click, and run them directly from this application.",
     "recommended": "Recommended",
     "systemInfo": "{{os}} · {{cores}} cores · {{ram}} RAM · {{gpu}} · {{vram}} VRAM",
