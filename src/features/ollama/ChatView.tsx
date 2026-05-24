@@ -1,15 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { sendChatMessage } from "./api"
-import { getRepoContext, validateRepoPath } from "./system"
-
-let msgId = 0
-
-interface ChatMessage {
-  id: number
-  role: "user" | "assistant" | "context"
-  content: string
-}
+import { useChat } from "./hooks/useChat"
 
 export function ChatView({
   modelName,
@@ -21,91 +12,30 @@ export function ChatView({
   category?: "chat" | "code"
 }) {
   const { t } = useTranslation()
-  const [messages, setMessages] = useState<ChatMessage[]>([])
-  const [input, setInput] = useState("")
-  const [loading, setLoading] = useState(false)
-  const [repoPath, setRepoPath] = useState("")
-  const [repoValid, setRepoValid] = useState<boolean | null>(null)
-  const [repoChecking, setRepoChecking] = useState(false)
-  const abortRef = useRef<AbortController | null>(null)
   const endRef = useRef<HTMLDivElement | null>(null)
+  const [inputValue, setInputValue] = useState("")
+
+  const {
+    messages,
+    loading,
+    repoPath,
+    repoValid,
+    repoChecking,
+    handleRepoChange,
+    checkRepoPath,
+    send,
+    abort,
+  } = useChat(modelName, category)
 
   useEffect(() => {
     endRef.current?.scrollIntoView()
   })
 
-  const checkRepoPath = useCallback(async (path: string) => {
-    if (!path.trim()) {
-      setRepoValid(null)
-      setRepoChecking(false)
-      return
-    }
-    setRepoChecking(true)
-    const ok = await validateRepoPath(path)
-    setRepoValid(ok)
-    setRepoChecking(false)
-  }, [])
-
-  const handleSend = async () => {
-    const text = input.trim()
+  const handleSend = () => {
+    const text = inputValue.trim()
     if (!text || loading) return
-    setInput("")
-
-    const repoPathValue =
-      repoPath.trim() && repoValid !== false ? repoPath.trim() : null
-
-    let repoInfo = ""
-    if (repoPathValue) {
-      const ctx = await getRepoContext(repoPathValue)
-      if (ctx) {
-        const filesBlock = ctx.files
-          .map((f) => `--- ${f.path} ---\n${f.content}`)
-          .join("\n\n")
-        repoInfo = [
-          "Repository structure:",
-          ctx.tree,
-          "",
-          filesBlock ? `Key files:\n${filesBlock}` : "",
-        ]
-          .filter(Boolean)
-          .join("\n")
-      }
-    }
-
-    setMessages((prev) => [
-      ...prev,
-      ...(repoPathValue
-        ? [{ id: ++msgId, role: "context" as const, content: repoPathValue }]
-        : []),
-      { id: ++msgId, role: "user", content: text },
-    ])
-    setLoading(true)
-
-    const richText = repoInfo
-      ? `The user is asking about a code repository at: ${repoPathValue}\n\n${repoInfo}\n\nUser question: ${text}`
-      : text
-    const controller = new AbortController()
-    abortRef.current = controller
-    try {
-      const response = await sendChatMessage(
-        modelName,
-        richText,
-        controller.signal,
-      )
-      setMessages((prev) => [
-        ...prev,
-        { id: ++msgId, role: "assistant", content: response },
-      ])
-    } catch {
-      if (controller.signal.aborted) return
-      setMessages((prev) => [
-        ...prev,
-        { id: ++msgId, role: "assistant", content: t("ollama.chatError") },
-      ])
-    } finally {
-      setLoading(false)
-      abortRef.current = null
-    }
+    setInputValue("")
+    send(text)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -127,10 +57,7 @@ export function ChatView({
               <input
                 type="text"
                 value={repoPath}
-                onChange={(e) => {
-                  setRepoPath(e.target.value)
-                  setRepoValid(null)
-                }}
+                onChange={(e) => handleRepoChange(e.target.value)}
                 onBlur={() => checkRepoPath(repoPath)}
                 placeholder={t("ollama.repoPath")}
                 disabled={loading}
@@ -199,8 +126,8 @@ export function ChatView({
       <div className="flex gap-2 items-start border-t border-[var(--elevate-border)] p-3">
         <input
           type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
           disabled={loading}
           placeholder={t("ollama.chatInput")}
@@ -211,7 +138,7 @@ export function ChatView({
             type="button"
             className="button-primary !py-1.5 !px-3 !text-xs !h-auto !leading-tight"
             onClick={handleSend}
-            disabled={loading || !input.trim()}
+            disabled={loading || !inputValue.trim()}
           >
             {t("ollama.send")}
           </button>
@@ -219,7 +146,7 @@ export function ChatView({
             <button
               type="button"
               className="!py-1 !px-3 !text-[10px] !h-auto !leading-none !bg-transparent !border !border-[var(--elevate-border)] !text-[var(--elevate-muted)] hover:!text-[var(--elevate-text)]"
-              onClick={() => abortRef.current?.abort()}
+              onClick={abort}
             >
               {t("ollama.stopGen")}
             </button>

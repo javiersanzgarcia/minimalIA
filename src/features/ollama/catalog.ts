@@ -1,9 +1,4 @@
-export interface CatalogModel {
-  name: string
-  tag: string
-  size: string
-  descriptionKey: string
-}
+import type { CatalogModel } from "./domain/types"
 
 export const chatModels: CatalogModel[] = [
   {

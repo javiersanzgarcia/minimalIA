@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next"
-import { getRecommendedChat, getRecommendedCode } from "./system"
+import { getRecommendedChat, getRecommendedCode } from "./recommendations"
 import { useSystemSpecs } from "./use-system-specs"
 
 function val(v: number | null, unit: string): string {

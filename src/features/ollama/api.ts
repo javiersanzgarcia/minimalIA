@@ -1,13 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import type { OllamaModel } from "./domain/types"
 
 const OLLAMA_BASE = "http://localhost:11434"
-
-export interface OllamaModel {
-  name: string
-  modified_at: string
-  size: number
-  digest: string
-}
 
 interface TagsResponse {
   models: OllamaModel[]
@@ -52,24 +46,6 @@ export function usePullModel() {
   })
 }
 
-export function useRunModel() {
-  return useMutation({
-    mutationFn: async (modelName: string) => {
-      const res = await fetch(`${OLLAMA_BASE}/api/generate`, {
-        method: "POST",
-        body: JSON.stringify({
-          model: modelName,
-          prompt: "Hello, respond with a single sentence.",
-          stream: false,
-        }),
-      })
-      if (!res.ok) throw new Error(`Failed to run model ${modelName}`)
-      const data = await res.json()
-      return data.response as string
-    },
-  })
-}
-
 export function useDeleteModel() {
   const queryClient = useQueryClient()
 
@@ -85,23 +61,4 @@ export function useDeleteModel() {
       queryClient.invalidateQueries({ queryKey: ["ollama-models"] })
     },
   })
-}
-
-export async function sendChatMessage(
-  modelName: string,
-  message: string,
-  signal?: AbortSignal,
-): Promise<string> {
-  const res = await fetch(`${OLLAMA_BASE}/api/generate`, {
-    method: "POST",
-    body: JSON.stringify({
-      model: modelName,
-      prompt: message,
-      stream: false,
-    }),
-    signal,
-  })
-  if (!res.ok) throw new Error(`Chat failed: ${res.statusText}`)
-  const data = await res.json()
-  return data.response as string
 }

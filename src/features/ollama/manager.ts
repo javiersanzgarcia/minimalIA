@@ -1,7 +1,6 @@
 import { useState } from "react"
-import { type OllamaModel, useDeleteModel, usePullModel } from "./api"
-
-type Category = "chat" | "code"
+import { useDeleteModel, usePullModel } from "./api"
+import type { Category, OllamaModel } from "./domain/types"
 
 export interface ModelManager {
   isInstalled: (name: string) => boolean

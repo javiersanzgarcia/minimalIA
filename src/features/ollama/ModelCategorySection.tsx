@@ -1,10 +1,10 @@
 import { useTranslation } from "react-i18next"
 import { ChatView } from "./ChatView"
-import type { CatalogModel } from "./catalog"
 import { modelFullName } from "./catalog"
+import type { CatalogModel } from "./domain/types"
 import { ModelCard } from "./ModelCard"
 import type { ModelManager } from "./manager"
-import { getRecommendedChat, getRecommendedCode } from "./system"
+import { getRecommendedChat, getRecommendedCode } from "./recommendations"
 import { useSystemSpecs } from "./use-system-specs"
 
 export function ModelCategorySection({

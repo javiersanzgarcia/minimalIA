@@ -184,17 +184,25 @@ minimalIA/
 │   ├── assets/fonts/       # Fuentes Roboto y Domine (woff/woff2)
 │   ├── features/
 │   │   ├── ollama/         # Gestión de modelos Ollama
-│   │   │   ├── api.ts          # Hooks de API (useOllamaStatus, usePullModel, etc.)
-│   │   │   ├── catalog.ts      # Catálogo de modelos recomendados
-│   │   │   ├── manager.ts      # Hook useModelManager (estado y operaciones)
-│   │   │   ├── ChatView.tsx    # Ventana de chat con historial
+│   │   │   ├── api/
+│   │   │   │   ├── ollama.ts    # Ollama HTTP API calls (sendChatMessage)
+│   │   │   │   └── tauri.ts     # Tauri invoke wrappers (getSystemSpecs, validateRepoPath, getRepoContext)
+│   │   │   ├── domain/
+│   │   │   │   └── types.ts     # Shared type definitions
+│   │   │   ├── hooks/
+│   │   │   │   └── useChat.ts   # Chat state management hook
+│   │   │   ├── api.ts           # React Query hooks (useOllamaStatus, usePullModel, useDeleteModel)
+│   │   │   ├── catalog.ts       # Catálogo de modelos recomendados
+│   │   │   ├── manager.ts       # Hook useModelManager (estado y operaciones)
+│   │   │   ├── recommendations.ts  # Lógica de recomendación de modelos
+│   │   │   ├── system.ts        # Detección de sistema con fallback browser
+│   │   │   ├── use-system-specs.ts
+│   │   │   ├── ChatView.tsx     # Ventana de chat (delgada, delega en useChat)
 │   │   │   ├── InstallOllama.tsx
 │   │   │   ├── ModelCard.tsx
 │   │   │   ├── ModelCategorySection.tsx
 │   │   │   ├── OllamaManager.tsx
-│   │   │   ├── SystemInfo.tsx
-│   │   │   ├── system.ts       # Detección de sistema y recomendaciones
-│   │   │   └── use-system-specs.ts
+│   │   │   └── SystemInfo.tsx
 │   │   ├── theme/          # Modo oscuro/claro
 │   │   │   ├── store.ts        # Estado del tema (Zustand)
 │   │   │   └── ThemeToggle.tsx
