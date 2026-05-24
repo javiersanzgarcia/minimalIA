@@ -1,5 +1,5 @@
-import { ThemeToggle } from "./components/ThemeToggle";
-import "./App.css";
+import { ThemeToggle } from "./components/ThemeToggle"
+import "./App.css"
 
 function App() {
   return (
@@ -20,26 +20,44 @@ function App() {
             The perfect template to present your awesome product.
           </h1>
           <p className="lead max-w-2xl mx-auto mt-6">
-            Built with Rust, Tauri, React, TypeScript, Tailwind CSS, React Query, and Zustand.
-            Featuring the Elevate design system.
+            Built with Rust, Tauri, React, TypeScript, Tailwind CSS, React
+            Query, and Zustand. Featuring the Elevate design system.
           </p>
         </section>
 
         <section className="mb-16">
           <div className="flex flex-wrap justify-center gap-6">
-            <button className="button-primary">Get Started</button>
-            <button className="stroke">Learn More</button>
+            <button type="button" className="button-primary">
+              Get Started
+            </button>
+            <button type="button" className="stroke">
+              Learn More
+            </button>
           </div>
         </section>
 
         <section className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
           {[
-            { title: "Rust Core", desc: "High-performance backend logic compiled to native code via Tauri." },
-            { title: "React Frontend", desc: "Modern UI with React Query for data fetching and Zustand for state." },
-            { title: "Tailwind CSS", desc: "Utility-first styling with Elevate fonts and theme system." },
+            {
+              title: "Rust Core",
+              desc: "High-performance backend logic compiled to native code via Tauri.",
+            },
+            {
+              title: "React Frontend",
+              desc: "Modern UI with React Query for data fetching and Zustand for state.",
+            },
+            {
+              title: "Tailwind CSS",
+              desc: "Utility-first styling with Elevate fonts and theme system.",
+            },
           ].map((f) => (
-            <article key={f.title} className="p-6 rounded-lg bg-[var(--elevate-input-bg)]">
-              <span className="block text-4xl mb-4 text-[var(--elevate-accent)] font-[roboto-bold]">01</span>
+            <article
+              key={f.title}
+              className="p-6 rounded-lg bg-[var(--elevate-input-bg)]"
+            >
+              <span className="block text-4xl mb-4 text-[var(--elevate-accent)] font-[roboto-bold]">
+                01
+              </span>
               <h3 className="font-[roboto-medium]">{f.title}</h3>
               <p className="text-[var(--elevate-muted)]">{f.desc}</p>
             </article>
@@ -54,7 +72,7 @@ function App() {
         </section>
       </main>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

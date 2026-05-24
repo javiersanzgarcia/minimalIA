@@ -36,26 +36,33 @@ body {
   background: var(--elevate-bg);
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: "roboto-black", sans-serif;
   color: var(--elevate-heading);
   font-style: normal;
   margin-bottom: 2.1rem;
 }
 
-h3, h4 {
+h3,
+h4 {
   margin-bottom: 1.8rem;
 }
 
-h5, h6 {
-  font-family: "roboto-bold";
+h5,
+h6 {
+  font-family: "roboto-bold", sans-serif;
   margin-bottom: 1.2rem;
 }
 
 h1 {
   font-size: 3.1rem;
   line-height: 1.355;
-  letter-spacing: -.1rem;
+  letter-spacing: -0.1rem;
 }
 
 h2 {
@@ -77,14 +84,14 @@ h5 {
   font-size: 1.4rem;
   line-height: 1.714;
   text-transform: uppercase;
-  letter-spacing: .15rem;
+  letter-spacing: 0.15rem;
 }
 
 h6 {
   font-size: 1.3rem;
   line-height: 1.846;
   text-transform: uppercase;
-  letter-spacing: .15rem;
+  letter-spacing: 0.15rem;
 }
 
 p.lead {
@@ -94,12 +101,15 @@ p.lead {
   color: var(--elevate-muted);
 }
 
-a, a:visited {
+a,
+a:visited {
   color: var(--elevate-accent);
   transition: all 0.3s ease-in-out;
 }
 
-a:hover, a:focus, a:active {
+a:hover,
+a:focus,
+a:active {
   color: var(--elevate-accent-hover);
 }
 
@@ -140,11 +150,13 @@ blockquote cite:before {
   content: "\2014 \0020";
 }
 
-em, i {
+em,
+i {
   font-family: "roboto-italic", serif;
 }
 
-strong, b {
+strong,
+b {
   font-family: "roboto-bold", serif;
 }
 
@@ -158,7 +170,8 @@ table {
   font-family: "roboto-regular", sans-serif;
 }
 
-th, td {
+th,
+td {
   padding: 1.5rem 3rem;
   text-align: left;
   border-bottom: 1px solid var(--elevate-border);
@@ -173,8 +186,14 @@ td {
   line-height: 1.5;
 }
 
-th:first-child, td:first-child { padding-left: 0; }
-th:last-child, td:last-child { padding-right: 0; }
+th:first-child,
+td:first-child {
+  padding-left: 0;
+}
+th:last-child,
+td:last-child {
+  padding-right: 0;
+}
 
 input[type="email"],
 input[type="number"],
@@ -197,7 +216,6 @@ select {
   line-height: 3rem;
   max-width: 100%;
   background: var(--elevate-input-bg);
-  border: none;
   transition: all 0.3s ease-in-out;
 }
 
@@ -222,11 +240,11 @@ input[type="button"] {
   font-family: "roboto-black", sans-serif;
   font-size: 1.4rem;
   text-transform: uppercase;
-  letter-spacing: .3rem;
+  letter-spacing: 0.3rem;
   height: 5.4rem;
   line-height: 5.4rem;
   padding: 0 3rem;
-  margin: 0 .3rem 1.2rem 0;
+  margin: 0 0.3rem 1.2rem 0;
   background: var(--elevate-button-bg);
   color: var(--elevate-button-text);
   text-decoration: none;
@@ -247,7 +265,7 @@ input[type="submit"]:hover {
 
 .button-primary {
   background: var(--elevate-primary);
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .button-primary:hover {
@@ -256,7 +274,7 @@ input[type="submit"]:hover {
 
 button.stroke,
 .button.stroke {
-  background: transparent !important;
+  background: transparent;
   border: 3px solid #313131;
   line-height: 4.8rem;
 }
@@ -268,10 +286,17 @@ button.stroke:hover,
 }
 
 @media only screen and (max-width: 600px) {
-  h1 { font-size: 2.6rem; letter-spacing: -.07rem; }
-  p.lead { font-size: 1.9rem; }
+  h1 {
+    font-size: 2.6rem;
+    letter-spacing: -0.07rem;
+  }
+  p.lead {
+    font-size: 1.9rem;
+  }
 }
 
 @media only screen and (max-width: 768px) {
-  p.lead { font-size: 1.9rem; }
+  p.lead {
+    font-size: 1.9rem;
+  }
 }
