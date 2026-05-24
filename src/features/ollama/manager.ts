@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useDeleteModel, usePullModel } from "./api"
+import { unloadModel } from "./api/ollama"
 import type { Category, OllamaModel } from "./domain/types"
 
 export interface ModelManager {
@@ -46,6 +47,8 @@ export function useModelManager(
   }
 
   const stopChat = (category: Category) => {
+    const modelName = activeChat[category]
+    if (modelName) unloadModel(modelName)
     setActiveChat((prev) => ({ ...prev, [category]: null }))
   }
 

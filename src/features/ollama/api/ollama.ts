@@ -18,3 +18,20 @@ export async function sendChatMessage(
   const data = await res.json()
   return data.response as string
 }
+
+export async function unloadModel(modelName: string): Promise<void> {
+  try {
+    await fetch(`${OLLAMA_BASE}/api/generate`, {
+      method: "POST",
+      body: JSON.stringify({
+        model: modelName,
+        prompt: "",
+        keep_alive: "0m",
+        stream: false,
+      }),
+      signal: AbortSignal.timeout(2000),
+    })
+  } catch {
+    /* best effort */
+  }
+}
